@@ -1,26 +1,280 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-gold-400: #D4AF37;
+  --color-gold-500: #b28d22;
+  --color-gold-600: #8c6e18;
+
+  --color-base-dark: #0a0a0a;
+  --color-base-light: #f5f5f5;
+
+  --color-warm-50: #f0ede6;
+  --color-warm-100: #d4cfc5;
+  --color-warm-200: #b0a998;
+  --color-warm-300: #8c8474;
+  --color-warm-400: #6e6658;
+  --color-warm-500: #504a3e;
+  --color-warm-600: #3a352d;
+  --color-warm-700: #2a2620;
+  --color-warm-800: #1e1b16;
+  --color-warm-900: #141210;
+  --color-warm-950: #0e0d0a;
+
+  --color-whatsapp: #1a7a42;
+  --color-whatsapp-hover: #1f8f4c;
+
+  --font-serif: var(--font-playfair), var(--font-ibm-plex-sans-arabic), "Georgia", serif;
+  --font-sans: var(--font-ibm-plex-sans-arabic), "Helvetica Neue", "Helvetica", sans-serif;
+  --font-arabic: var(--font-ibm-plex-sans-arabic), "Arial", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@custom-variant dark (&:is(.dark *));
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--color-base-dark);
+    --foreground: var(--color-warm-100);
+    --section-padding-y: 8rem;
+    --section-border: 1px solid color-mix(in oklch, var(--color-gold-600) 20%, transparent);
+    --content-max-width: 80rem;
+    --section-header-max-width: 42rem;
+    --transition-duration: 300ms;
+    --transition-duration-slow: 700ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
+    --space-4xl: 6rem;
+    --space-5xl: 8rem;
+    --space-6xl: 12rem;
+
+    --shadow-color-gold-0: rgba(212, 175, 55, 0);
+    --shadow-color-gold-15: rgba(212, 175, 55, 0.15);
+    --shadow-color-gold-20: rgba(212, 175, 55, 0.2);
+    --shadow-color-gold-30: rgba(212, 175, 55, 0.3);
+    --shadow-color-gold-50: rgba(212, 175, 55, 0.5);
+    --shadow-color-dark-30: rgba(0, 0, 0, 0.3);
+    --shadow-color-dark-40: rgba(0, 0, 0, 0.4);
+    --shadow-color-dark-60: rgba(0, 0, 0, 0.6);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold-400);
+    outline-offset: 2px;
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-gold-400);
+    color: var(--color-warm-950);
+    padding: 0.75rem 1.5rem;
+    z-index: 10000;
+    font-weight: 500;
+    transition: top 0.2s ease;
+  }
+
+  .skip-link:focus {
+    top: 0.5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    .animate-pulse,
+    .animate-ping {
+      animation: none !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .section-wrapper {
+    @apply py-16 sm:py-20 md:py-28 lg:py-32 bg-[var(--background)] relative;
+    border-top: var(--section-border);
+  }
+
+  .section-container {
+    @apply container mx-auto px-5 sm:px-6;
+    max-width: var(--content-max-width);
+    padding-left: max(1.25rem, env(safe-area-inset-left));
+    padding-right: max(1.25rem, env(safe-area-inset-right));
+  }
+
+  .section-container--narrow {
+    max-width: var(--section-header-max-width);
+    @apply mx-auto;
+  }
+
+  .section-label {
+    @apply text-[var(--color-gold-400)] uppercase tracking-[0.3em] text-xs sm:text-sm font-semibold mb-4 font-sans;
+  }
+
+  .section-title {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-[var(--color-warm-50)] mb-6 leading-tight;
+  }
+
+  .section-subtitle {
+    @apply text-[var(--color-warm-300)] font-sans leading-relaxed text-sm sm:text-base md:text-lg xl:text-xl;
+  }
+
+  .section-divider {
+    @apply w-0 h-px bg-[var(--color-gold-600)] mx-auto;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .section-divider.is-visible {
+    @apply w-16;
+  }
+
+  .section-header {
+    @apply text-center mb-10 sm:mb-12 md:mb-20 max-w-2xl mx-auto;
+  }
+
+  .cta-primary {
+    @apply inline-block border border-[var(--color-gold-400)] text-[var(--color-gold-400)] hover:bg-[var(--color-gold-400)] hover:text-[var(--color-warm-950)] transition-all duration-[var(--transition-duration)] px-6 py-3.5 sm:px-8 sm:py-4 lg:px-10 lg:py-5 tracking-widest text-xs sm:text-sm lg:text-base uppercase font-medium;
+    box-shadow: 0 0 0 var(--shadow-color-gold-0);
+  }
+
+  @media (hover: hover) {
+    .cta-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px var(--shadow-color-gold-15);
+    }
+  }
+
+  .cta-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 0 0 var(--shadow-color-gold-0);
+    transition-duration: 100ms;
+  }
+
+  @keyframes gentle-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  @keyframes gold-pulse {
+    0%, 100% { box-shadow: 0 0 8px var(--shadow-color-gold-30); }
+    50% { box-shadow: 0 0 16px var(--shadow-color-gold-50), 0 0 4px var(--shadow-color-gold-20); }
+  }
+
+  @keyframes ring-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.6); opacity: 0; }
+  }
+
+  .animate-bob {
+    animation: gentle-bob 2.5s ease-in-out infinite;
+  }
+
+  .animate-gold-pulse {
+    animation: gold-pulse 2.5s ease-in-out infinite;
+  }
+
+  .animate-ring-pulse {
+    animation: ring-pulse 2.5s ease-out infinite;
+  }
+
+  .card-lift {
+    transition: transform var(--transition-duration-slow) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--transition-duration-slow) cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (hover: hover) {
+    .card-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px var(--shadow-color-dark-40);
+    }
+  }
+
+  .card-lift:active {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px var(--shadow-color-dark-30);
+    transition-duration: 150ms;
+  }
+
+  .text-heading {
+    @apply text-[var(--color-warm-50)];
+  }
+
+  .text-body {
+    @apply text-[var(--color-warm-300)];
+  }
+
+  .text-body-light {
+    @apply text-[var(--color-warm-200)];
+  }
+
+  .text-muted {
+    @apply text-[var(--color-warm-400)];
+  }
+
+  .text-faint {
+    @apply text-[var(--color-warm-500)];
+  }
+
+  .border-subtle {
+    border-color: color-mix(in oklch, var(--color-warm-700) 100%, transparent);
+  }
+
+  .border-gold-subtle {
+    border-color: color-mix(in oklch, var(--color-gold-600) 20%, transparent);
+  }
+
+  @media (hover: none) {
+    .card-lift:active {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--shadow-color-dark-30);
+    }
+
+    .touch-active:active {
+      transform: scale(0.98);
+      transition-duration: 100ms;
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-warm-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-warm-700);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold-600);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-warm-700) var(--color-warm-950);
 }
