@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, IBM_Plex_Sans_Arabic } from "next/font/google";
-import CustomCursor from "@/components/ui/CustomCursor";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -36,11 +35,10 @@ export default function RootLayout({
       dir="rtl"
       className={`${playfair.variable} ${ibmPlexArabic.variable} antialiased overflow-x-hidden`}
     >
-      <body className="min-h-[100dvh] flex flex-col font-sans bg-[var(--background)] text-[var(--foreground)] selection:bg-[var(--color-gold-400)] selection:text-[var(--color-warm-950)] relative">
+      <body className="min-h-[100dvh] flex flex-col font-sans bg-[var(--background)] text-[var(--foreground)] selection:bg-[var(--color-gold-400)] selection:text-[var(--color-warm-950)] relative film-grain">
         <a href="#main-content" className="skip-link">
           انتقلي إلى المحتوى الرئيسي
         </a>
-        <CustomCursor />
         <div id="main-content">
           {children}
         </div>

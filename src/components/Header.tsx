@@ -46,15 +46,18 @@ export default function Header() {
 
     if (!prefersReducedMotion()) {
       gsap.fromTo(header, {
-        y: -30,
+        yPercent: -100,
         opacity: 0,
       }, {
-        y: 0,
+        yPercent: 0,
         opacity: 1,
         duration: 1,
         ease: "power3.out",
         delay: 0.3,
+        clearProps: "transform",
       });
+    } else {
+      gsap.set(header, { opacity: 1 });
     }
 
     const handleScroll = () => {
@@ -74,6 +77,21 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header || menuOpen) return;
+
+    if (prefersReducedMotion()) {
+      gsap.set(header, { yPercent: isHidden ? -100 : 0 });
+    } else {
+      gsap.to(header, {
+        yPercent: isHidden ? -100 : 0,
+        duration: 0.5,
+        ease: "power3.out",
+      });
+    }
+  }, [isHidden, menuOpen]);
 
   useEffect(() => {
     const menu = menuRef.current;
@@ -176,11 +194,10 @@ export default function Header() {
       <header
         ref={headerRef}
         className={cn(
-          "fixed top-0 inset-x-0 z-50 transition-all duration-700 ease-[var(--ease-out)] opacity-0",
-          isHidden ? "-translate-y-full" : "translate-y-0",
+          "fixed top-0 inset-x-0 z-50 transition-colors duration-500 ease-[var(--ease-out)]",
           scrolled ? "bg-[var(--color-warm-950)]/90 border-b border-[var(--color-warm-700)]/20" : "bg-[var(--color-warm-950)]/70"
         )}
-        style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+        style={{ paddingTop: "env(safe-area-inset-top, 0px)", willChange: "transform" }}
       >
         <div className={cn(
           "container mx-auto px-5 sm:px-6 flex items-center justify-between",

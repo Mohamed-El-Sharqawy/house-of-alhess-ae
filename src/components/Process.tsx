@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { cn, prefersReducedMotion } from "@/lib/utils";
+import SectionReveal from "./ui/SectionReveal";
 
 const STEPS = [
   { id: 1, title: "التصميم المبدئي", desc: "كل تحفة تبدأ بنظرة. مصمماتنا يترجمون ذوقج في رسمة دقيقة تبرز جمال القصة.", align: "left" },
@@ -68,15 +69,17 @@ export default function Process() {
   return (
     <section id="process" ref={containerRef} className="section-wrapper overflow-hidden !py-20 sm:!py-28 md:!py-36 lg:!py-44">
       <div className="section-container" style={{ maxWidth: "64rem" }}>
-        <div className="section-header">
-          <span className="section-label">
-            الرحلة
-          </span>
-          <h2 className="section-title">
-            من الخيال إلى <span className="italic">الواقع</span>
-          </h2>
-          <div ref={dividerRef} className="section-divider" />
-        </div>
+        <SectionReveal direction="center">
+          <div className="section-header">
+            <span className="section-label">
+              الرحلة
+            </span>
+            <h2 className="section-title">
+              من الخيال إلى <span className="italic">الواقع</span>
+            </h2>
+            <div ref={dividerRef} className="section-divider" />
+          </div>
+        </SectionReveal>
 
         <div className="relative">
           <div className="absolute left-4 sm:left-4 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-[1px] bg-[var(--color-warm-700)]/50" />

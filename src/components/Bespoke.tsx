@@ -4,7 +4,11 @@ import { useRef, useState, useSyncExternalStore, useCallback } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn, prefersReducedMotion } from "@/lib/utils";
+import SectionReveal from "./ui/SectionReveal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const HOTSPOTS = [
   { id: 1, top: "25%", left: "35%", title: "قصة الأكتاف", desc: "قياسات دقيقة تضمن لج انسيابية وأناقة بدون أي وزن زايد.", ariaLabel: "تفاصيل قصة الأكتاف" },
@@ -33,63 +37,42 @@ function useIsTouchDevice() {
 export default function Bespoke() {
   const [activeSpot, setActiveSpot] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLDivElement>(null);
   const isTouch = useIsTouchDevice();
 
   useGSAP(() => {
     if (prefersReducedMotion()) {
-      gsap.set(textRef.current, { x: 0, opacity: 1 });
       gsap.set(imgRef.current, { x: 0, opacity: 1 });
       return;
     }
 
-    gsap.from(textRef.current, {
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 75%",
-      },
-      x: -50,
-      opacity: 0,
-      duration: 1.2,
-      ease: "power3.out",
-    });
-
     gsap.from(imgRef.current, {
       scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 75%",
+        trigger: imgRef.current,
+        start: "top 80%",
       },
       x: 50,
       opacity: 0,
       duration: 1.2,
       ease: "power3.out",
-      delay: 0.15,
+      delay: 0.2,
     });
 
     const hotspots = gsap.utils.toArray<HTMLElement>(".hotspot-dot");
     gsap.fromTo(hotspots, {
-      scrollTrigger: {
-        trigger: imgRef.current,
-        start: "top 75%",
-      },
       scale: 0,
       opacity: 0,
-      duration: 0.6,
-      ease: "back.out(1.7)",
-      stagger: 0.12,
-      delay: 0.4,
     }, {
-      scrollTrigger: {
-        trigger: imgRef.current,
-        start: "top 75%",
-      },
       scale: 1,
       opacity: 1,
       duration: 0.6,
       ease: "back.out(1.7)",
       stagger: 0.12,
       delay: 0.4,
+      scrollTrigger: {
+        trigger: imgRef.current,
+        start: "top 75%",
+      },
     });
   }, { scope: sectionRef });
 
@@ -102,24 +85,26 @@ export default function Bespoke() {
       <div className="section-container">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-center">
 
-          <div ref={textRef} className="max-w-xl">
-            <span className="section-label">
-              الخياط الافتراضي
-            </span>
-            <h2 className="section-title">
-              مُصممة حصرياً <span className="italic ms-4">لج</span>
-            </h2>
-            <p className="section-subtitle mb-10">
-              الرفاهية الحقيقية تبدأ من القياس المثالي. دقة تفصيلنا تضمن لج قصة تناسبج بالملي. جربي تجربة تفصيل تحترم أصالة الماضي وتواكب رقي الحاضر.
-            </p>
-            <div className="flex gap-4">
-              <span className="w-16 h-[1px] bg-[var(--color-gold-600)] mt-3 shrink-0"></span>
-
-              <p className="text-sm text-body-light italic">
-                {isTouch ? "اضغطي على النقاط لتكتشفي دقة التفصيل عندنا." : "مرري على النقاط أو اضغطي عليها لتكتشفي دقة التفصيل عندنا."}
+          <SectionReveal direction="left">
+            <div className="max-w-xl">
+              <span className="section-label">
+                الخياط الافتراضي
+              </span>
+              <h2 className="section-title">
+                مُصممة حصرياً <span className="italic ms-4">لج</span>
+              </h2>
+              <p className="section-subtitle mb-10">
+                الرفاهية الحقيقية تبدأ من القياس المثالي. دقة تفصيلنا تضمن لج قصة تناسبج بالملي. جربي تجربة تفصيل تحترم أصالة الماضي وتواكب رقي الحاضر.
               </p>
+              <div className="flex gap-4">
+                <span className="w-16 h-[1px] bg-[var(--color-gold-600)] mt-3 shrink-0"></span>
+
+                <p className="text-sm text-body-light italic">
+                  {isTouch ? "اضغطي على النقاط لتكتشفي دقة التفصيل عندنا." : "مرري على النقاط أو اضغطي عليها لتكتشفي دقة التفصيل عندنا."}
+                </p>
+              </div>
             </div>
-          </div>
+          </SectionReveal>
 
           <div ref={imgRef} className="relative aspect-[3/4] w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto lg:ml-auto">
             <div className="absolute inset-0 rounded-t-full overflow-hidden border border-gold-subtle" style={{ boxShadow: '-12px 12px 30px var(--shadow-color-dark-60)' }}>

@@ -11,16 +11,22 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
   const container = useRef<HTMLDivElement>(null);
+  const macroWrapperRef = useRef<HTMLDivElement>(null);
+  const revealWrapperRef = useRef<HTMLDivElement>(null);
   const macroImgRef = useRef<HTMLImageElement>(null);
   const revealImgRef = useRef<HTMLImageElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const h1Ref = useRef<HTMLHeadingElement>(null);
   const paraRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const vignetteRef = useRef<HTMLDivElement>(null);
+  const displacementFilterRef = useRef<SVGFEDisplacementMapElement>(null);
+  const turbulenceRef = useRef<SVGFETurbulenceElement>(null);
 
   useGSAP(() => {
     if (prefersReducedMotion()) {
-      gsap.set(macroImgRef.current, { opacity: 0 });
+      gsap.set(macroWrapperRef.current, { opacity: 0 });
       gsap.set(revealImgRef.current, { scale: 1, opacity: 1 });
       gsap.set(textRef.current, { y: 0, opacity: 1 });
       gsap.set([h1Ref.current, paraRef.current, ctaRef.current], { opacity: 1, y: 0 });
@@ -28,7 +34,29 @@ export default function Hero() {
     }
 
     const isMobile = window.innerWidth < 768;
-    const scrollEnd = isMobile ? "+=100%" : "+=150%";
+    const scrollEnd = isMobile ? "+=180%" : "+=250%";
+
+    if (turbulenceRef.current && displacementFilterRef.current) {
+      gsap.to(turbulenceRef.current, {
+        attr: { baseFrequency: 0.06 },
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top top",
+          end: "40% top",
+          scrub: 0.8,
+        },
+      });
+
+      gsap.to(displacementFilterRef.current, {
+        attr: { scale: 0 },
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top top",
+          end: "45% top",
+          scrub: 0.8,
+        },
+      });
+    }
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -40,62 +68,138 @@ export default function Hero() {
       },
     });
 
-    tl.to(macroImgRef.current, {
-      scale: 1.5,
-      opacity: 0,
-      ease: "power2.inOut",
-      duration: 1,
-    })
+    // Image transitions: 0 -> 0.55 (55% of scroll)
+    tl.to(macroWrapperRef.current, {
+      y: -200,
+      ease: "none",
+      duration: 0.55,
+    }, 0)
+      .to(revealWrapperRef.current, {
+        y: -60,
+        ease: "none",
+        duration: 0.55,
+      }, 0)
+      .to(macroImgRef.current, {
+        scale: 2,
+        opacity: 0,
+        ease: "power2.inOut",
+        duration: 0.55,
+      }, 0)
       .fromTo(revealImgRef.current, {
-        scale: 1.1,
-        opacity: 0.5,
+        scale: 1.2,
+        opacity: 0.3,
       }, {
         scale: 1,
         opacity: 1,
         ease: "power2.out",
-        duration: 1,
-      }, "<")
+        duration: 0.55,
+      }, 0.05)
+
+    // Text reveal: 0.55 -> 0.75 (20% of scroll)
       .fromTo(textRef.current, {
-        y: 50,
+        y: 80,
         opacity: 0,
       }, {
         y: 0,
         opacity: 1,
-        duration: 0.3,
+        duration: 0.12,
         ease: "power3.out",
-      }, "-=0.2")
+      }, 0.55)
       .fromTo(h1Ref.current, {
-        y: 40,
+        y: 60,
         opacity: 0,
       }, {
         y: 0,
         opacity: 1,
-        duration: 0.4,
+        duration: 0.1,
         ease: "power3.out",
-      })
+      }, 0.60)
       .fromTo(paraRef.current, {
-        y: 25,
+        y: 35,
         opacity: 0,
       }, {
         y: 0,
         opacity: 1,
-        duration: 0.3,
+        duration: 0.08,
         ease: "power3.out",
-      }, "-=0.15")
+      }, 0.67)
       .fromTo(ctaRef.current, {
-        y: 20,
+        y: 30,
         opacity: 0,
       }, {
         y: 0,
         opacity: 1,
-        duration: 0.3,
+        duration: 0.08,
         ease: "power3.out",
-      }, "-=0.15");
+      }, 0.70)
+    
+    // Hold: 0.75 -> 1.0 (25% of scroll - nothing animates, just extra scroll time)
+    // No tweens needed, timeline just extends to duration 1.0
+
+    if (scrollIndicatorRef.current) {
+      gsap.to(scrollIndicatorRef.current, {
+        opacity: 0,
+        y: -30,
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top top",
+          end: "15% top",
+          scrub: true,
+        },
+      });
+    }
+
+    const bespokeSection = document.getElementById("bespoke");
+    if (bespokeSection) {
+      gsap.to(revealImgRef.current, {
+        scale: 1.15,
+        y: -50,
+        scrollTrigger: {
+          trigger: bespokeSection,
+          start: "top bottom",
+          end: "top 20%",
+          scrub: 1,
+        },
+      });
+
+      gsap.to(vignetteRef.current, {
+        opacity: 0.8,
+        scrollTrigger: {
+          trigger: bespokeSection,
+          start: "top bottom",
+          end: "top 30%",
+          scrub: true,
+        },
+      });
+    }
   }, { scope: container });
 
   return (
     <section ref={container} className="relative w-full h-screen overflow-hidden bg-[var(--background)] text-[var(--color-warm-50)]">
-      <div className="absolute inset-0 w-full h-full">
+      <svg className="absolute w-0 h-0 opacity-0" aria-hidden="true">
+        <defs>
+          <filter id="silk-displacement" x="-50%" y="-50%" width="200%" height="200%">
+            <feTurbulence
+              ref={turbulenceRef}
+              type="fractalNoise"
+              baseFrequency="0.025"
+              numOctaves="4"
+              result="noise"
+              seed="7"
+            />
+            <feDisplacementMap
+              ref={displacementFilterRef}
+              in="SourceGraphic"
+              in2="noise"
+              scale="80"
+              xChannelSelector="R"
+              yChannelSelector="G"
+            />
+          </filter>
+        </defs>
+      </svg>
+
+      <div ref={revealWrapperRef} className="absolute inset-0 w-full h-full will-change-transform">
         <Image
           ref={revealImgRef}
           src="/images/reveal.webp"
@@ -108,7 +212,13 @@ export default function Hero() {
         />
       </div>
 
-      <div className="absolute inset-0 w-full h-full z-10 pointer-events-none">
+      <div ref={vignetteRef} className="absolute inset-0 w-full h-full z-[5] pointer-events-none opacity-0 will-change-opacity" style={{ background: "linear-gradient(to bottom, var(--color-warm-950) 0%, transparent 40%, transparent 60%, var(--color-warm-950) 100%)" }} />
+
+      <div 
+        ref={macroWrapperRef}
+        className="absolute inset-0 w-full h-full z-10 pointer-events-none will-change-transform"
+        style={{ filter: "url(#silk-displacement)" }}
+      >
         <Image
           ref={macroImgRef}
           src="/images/hero_macro_final.webp"
@@ -141,7 +251,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="absolute bottom-3 sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center opacity-70" style={{ bottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
+      <div ref={scrollIndicatorRef} className="absolute bottom-3 sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center opacity-70" style={{ bottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
         <span className="text-[10px] sm:text-xs uppercase tracking-widest mb-2 font-light text-body-light">اسحبي للأسفل</span>
         <div className="w-[1px] h-8 sm:h-10 md:h-12 bg-gradient-to-b from-[var(--color-warm-50)] to-transparent animate-bob" />
       </div>

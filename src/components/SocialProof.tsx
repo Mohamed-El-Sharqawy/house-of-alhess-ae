@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn, prefersReducedMotion } from "@/lib/utils";
+import SectionReveal from "./ui/SectionReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,7 +23,7 @@ const InstagramIcon = ({ className }: { className?: string }) => (
   >
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-    <line x="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
   </svg>
 );
 
@@ -67,27 +68,29 @@ export default function SocialProof() {
   return (
     <section id="social" ref={containerRef} className="section-wrapper py-16! sm:py-20! md:py-28! lg:py-32!">
       <div className="section-container" style={{ maxWidth: "72rem" }}>
-        <div className="mb-14 sm:mb-20 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 sm:gap-8">
-          <div className="max-w-md">
-            <h2 className="section-title mb-3 sm:mb-4">
-              مثل ما شفتونا <br className="hidden sm:block" />على <span className="italic">الإنستقرام</span>
-            </h2>
-            <p className="section-subtitle max-w-sm">
-              تابعي رحلتنا واكتشفي كيف عميلاتنا يلبسون ويكشخون بقطع دار الحصّ.
-            </p>
+        <SectionReveal direction="right">
+          <div className="mb-14 sm:mb-20 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 sm:gap-8">
+            <div className="max-w-md">
+              <h2 className="section-title mb-3 sm:mb-4">
+                مثل ما شفتونا <br className="hidden sm:block" />على <span className="italic">الإنستقرام</span>
+              </h2>
+              <p className="section-subtitle max-w-sm">
+                تابعي رحلتنا واكتشفي كيف عميلاتنا يلبسون ويكشخون بقطع دار الحصّ.
+              </p>
+            </div>
+            <a
+              href="https://www.instagram.com/houseofalhess.ae/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 flex items-center gap-3 text-[var(--color-gold-400)] hover:text-[var(--color-warm-50)] active:text-[var(--color-warm-50)] transition-colors duration-[var(--transition-duration)] group sm:mt-2 touch-active"
+            >
+              <InstagramIcon className="h-8 w-8 sm:h-9 sm:w-9 opacity-80 group-hover:opacity-100 transition-opacity" />
+              <span className="text-xs tracking-widest uppercase font-semibold border-b border-[var(--color-gold-400)]/30 group-hover:border-[var(--color-warm-50)] pb-0.5 whitespace-nowrap">
+                @houseofalhess
+              </span>
+            </a>
           </div>
-          <a
-            href="https://www.instagram.com/houseofalhess.ae/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 flex items-center gap-3 text-[var(--color-gold-400)] hover:text-[var(--color-warm-50)] active:text-[var(--color-warm-50)] transition-colors duration-[var(--transition-duration)] group sm:mt-2 touch-active"
-          >
-            <InstagramIcon className="h-8 w-8 sm:h-9 sm:w-9 opacity-80 group-hover:opacity-100 transition-opacity" />
-            <span className="text-xs tracking-widest uppercase font-semibold border-b border-[var(--color-gold-400)]/30 group-hover:border-[var(--color-warm-50)] pb-0.5 whitespace-nowrap">
-              @houseofalhess
-            </span>
-          </a>
-        </div>
+        </SectionReveal>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
           {IG_POSTS.map((post) => (

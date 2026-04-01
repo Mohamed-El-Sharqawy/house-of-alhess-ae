@@ -6,11 +6,13 @@ import Process from "@/components/Process";
 import SocialProof from "@/components/SocialProof";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import ScrollProgressRail from "@/components/ui/ScrollProgressRail";
 
 export default function Home() {
   return (
     <main>
       <Header />
+      <ScrollProgressRail />
       <Hero />
       <Bespoke />
       <Collection />
