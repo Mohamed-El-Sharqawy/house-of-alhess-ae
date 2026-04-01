@@ -16,6 +16,33 @@ const ibmPlexArabic = IBM_Plex_Sans_Arabic({
 export const metadata: Metadata = {
   title: "دار الحصّ | أناقة استثنائية",
   description: "حيث تلتقي الأناقة بالرقي. اكتشفي مجموعتنا الحصرية من العبايات الفاخرة المصممة خصيصاً لج.",
+  icons: {
+    icon: "/favicon",
+    shortcut: "/favicon",
+    apple: "/favicon",
+  },
+  openGraph: {
+    title: "دار الحصّ | أناقة استثنائية",
+    description: "حيث تلتقي الأناقة بالرقي. اكتشفي مجموعتنا الحصرية من العبايات الفاخرة المصممة خصيصاً لج.",
+    url: "https://house-of-alhess-ae.vercel.app/",
+    siteName: "Dar Al-Hess",
+    images: [
+      {
+        url: "/opengraphimage.png",
+        width: 1200,
+        height: 630,
+        alt: "Dar Al-Hess Exclusive Abayas",
+      },
+    ],
+    locale: "ar_AE",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "دار الحصّ | أناقة استثنائية",
+    description: "حيث تلتقي الأناقة بالرقي. اكتشفي مجموعتنا الحصرية من العبايات الفاخرة المصممة خصيصاً لج.",
+    images: ["/opengraphimage.png"],
+  },
 };
 
 export const viewport: Viewport = {
@@ -35,7 +62,7 @@ export default function RootLayout({
       dir="rtl"
       className={`${playfair.variable} ${ibmPlexArabic.variable} antialiased overflow-x-hidden`}
     >
-      <body className="min-h-[100dvh] flex flex-col font-sans bg-[var(--background)] text-[var(--foreground)] selection:bg-[var(--color-gold-400)] selection:text-[var(--color-warm-950)] relative film-grain">
+      <body className="min-h-dvh flex flex-col font-sans bg-(--background) text-(--foreground) selection:bg-gold-400 selection:text-warm-950 relative film-grain">
         <a href="#main-content" className="skip-link">
           انتقلي إلى المحتوى الرئيسي
         </a>
